@@ -26,7 +26,6 @@ class MenuScreenScene: SKScene {
     
     var starsBackground, earthBackground, stardustBackground, moonBackground: SKSpriteNode!
     var dialogueBoxMenu, startButton, creditsButton: SKSpriteNode!
-//    var topText, topText2: SKNode!
     
     var touchButton: AVAudioPlayer!
     
@@ -65,7 +64,7 @@ class MenuScreenScene: SKScene {
         catch { return print("Cannot Find The Audio")}
         backAudioMain.numberOfLoops = -1
         backAudioMain.volume = 0.6
-//        backAudioMain.play()
+        backAudioMain.play()
     }
     
     func starsAnimation(node: SKSpriteNode?) {
@@ -112,13 +111,6 @@ class MenuScreenScene: SKScene {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         for t in touches { self.touchDown(atPoint: t.location(in: self)) }
     }
-    
-    //    func touchDown(atPoint pos : CGPoint) {
-    //        if startButton.contains(pos) {
-    //            startButton.alpha = 0.5
-    //            performNavigation?()
-    //        }
-    //    }
     
     func touchDown(atPoint pos: CGPoint) {
         if startButton.contains(pos) {

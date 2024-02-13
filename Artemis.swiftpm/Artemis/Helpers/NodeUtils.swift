@@ -239,9 +239,7 @@ func configureNodeSizePosition(node: SKSpriteNode?, scaleRatio: CGFloat, sceneSi
     
     let scaleFactor = desiredWidth / node.size.width
     
-    // Escala o nó
     node.setScale(scaleFactor)
     
-    // Ajusta a posição do nó para corrigir qualquer espaço entre as imagens
     node.position = CGPoint(x: node.position.x * scaleFactor, y: node.position.y * scaleFactor)
 }
