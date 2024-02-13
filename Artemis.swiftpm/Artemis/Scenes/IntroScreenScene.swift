@@ -5,7 +5,9 @@
 //  Created by Bianca Nathally Bezerra de Lima on 10/01/24.
 //
 
+import Foundation
 import SpriteKit
+import AVFoundation
 
 class IntroScreenScene: SKScene {
     var performNavigation: (() -> ())?
@@ -15,24 +17,13 @@ class IntroScreenScene: SKScene {
         return scene
     }
     
-    var starsBackground: SKSpriteNode!
-    var earthBackground: SKSpriteNode!
-    var stardustBackground: SKSpriteNode!
-    var moonBackground: SKSpriteNode!
-    
+    var starsBackground, earthBackground, stardustBackground, moonBackground, moon, gatewayOrion: SKSpriteNode!
     var luna: SKSpriteNode!
     var eyes: SKSpriteNode!
-    var reid: SKSpriteNode!
-    var victor: SKSpriteNode!
-    var christina: SKSpriteNode!
-    var jeremy: SKSpriteNode!
-    var reidBox: SKSpriteNode!
-    var victorBox: SKSpriteNode!
-    var christinaBox: SKSpriteNode!
-    var jeremyBox: SKSpriteNode!
+    var reid, victor, christina, jeremy: SKSpriteNode!
+    var reidBox, victorBox, christinaBox, jeremyBox: SKSpriteNode!
     private var animation: SKAction!
-    var dialogueBox: SKSpriteNode!
-    var nextButton: SKSpriteNode!
+    var dialogueBox, nextButton: SKSpriteNode!
     var dialogues: [Dialogue] = [
         Dialogue(popUp: "dialogueBox1", lunaImage: .luna1),
         Dialogue(popUp: "dialogueBox2", lunaImage: .luna1),
@@ -45,21 +36,34 @@ class IntroScreenScene: SKScene {
         Dialogue(popUp: "dialogueBox9", lunaImage: .luna1)
     ]
     
+    var touchButton: AVAudioPlayer!
+    
     override func didMove(to view: SKView) {
         // Background
         self.backgroundColor = UIColor(red: 0x1D / 255.0, green: 0x15 / 255.0, blue: 0x47 / 255.0, alpha: 1.0)
         
         starsBackground = (childNode(withName: "starsBackground") as! SKSpriteNode)
         starsAnimation(node: starsBackground)
+        
         earthBackground = (childNode(withName: "earthBackground") as! SKSpriteNode)
+        earthAnimation(node: earthBackground)
+        
         stardustBackground = (childNode(withName: "stardustBackground") as! SKSpriteNode)
+        
         moonBackground = (childNode(withName: "moonBackground") as! SKSpriteNode)
         moonAnimation(node: moonBackground)
+        
+        moon = (childNode(withName: "moon") as! SKSpriteNode)
+        gatewayOrion = (childNode(withName: "gatewayOrion") as! SKSpriteNode)
+        gatewayAnimation(node: gatewayOrion)
+        
+        configureNodesIntro(in: self)
         
         // Welcome
         luna = (childNode(withName: "Luna1") as! SKSpriteNode)
         eyes = (childNode(withName: "eyes") as! SKSpriteNode)
         eyesAnimation()
+        
         reid = (childNode(withName: "reid") as! SKSpriteNode)
         victor = (childNode(withName: "victor") as! SKSpriteNode)
         christina = (childNode(withName: "christina") as! SKSpriteNode)
@@ -74,6 +78,12 @@ class IntroScreenScene: SKScene {
         let dialogue = dialogues.removeFirst()
         dialogueBox.texture = SKTexture(imageNamed: dialogue.popUp)
         luna.texture = SKTexture(imageNamed: dialogue.lunaImage.rawValue)
+        
+        // touch button
+        let url: URL = Bundle.main.url(forResource: "touch", withExtension: "m4a")!
+        touchButton = try! AVAudioPlayer(contentsOf: url, fileTypeHint: nil)
+        touchButton.numberOfLoops = 1
+        touchButton.volume = 0.3
         
         reid.alpha = 0.0
         victor.alpha = 0.0
@@ -109,50 +119,84 @@ class IntroScreenScene: SKScene {
                 luna.alpha = 0.0
                 showImages()
                 hideEyes()
-            } else {
+                
+            } else if dialogue.popUp == "dialogueBox5" {
+                luna.alpha = 0.0
+                showMoon()
+                hideBackground()
+                hideEyes()
+                
+            } else  {
                 luna.alpha = 1.0
                 hideImages()
+                hideMoon()
+                showBackground()
                 showEyes()
             }
+            
         } else if dialogues.count == 0 {
             performNavigation?()
         }
     }
     
-    func showImages() {
+    func showBackground() {
         let fadeInAction = SKAction.fadeAlpha(to: 1.0, duration: 0.5)
-
-        let nodesToShow = [reid, victor, christina, jeremy, reidBox, victorBox, christinaBox, jeremyBox]
-
+        
+        let nodesToShow = [starsBackground, earthBackground, stardustBackground, moonBackground]
+        
         for node in nodesToShow {
             node?.run(fadeInAction)
         }
-//        reid.run(SKAction.fadeAlpha(to: 1.0, duration: 0.5))
-//        victor.run(SKAction.fadeAlpha(to: 1.0, duration: 0.5))
-//        christina.run(SKAction.fadeAlpha(to: 1.0, duration: 0.5))
-//        jeremy.run(SKAction.fadeAlpha(to: 1.0, duration: 0.5))
-//        reidBox.run(SKAction.fadeAlpha(to: 1.0, duration: 0.5))
-//        victorBox.run(SKAction.fadeAlpha(to: 1.0, duration: 0.5))
-//        christinaBox.run(SKAction.fadeAlpha(to: 1.0, duration: 0.5))
-//        jeremyBox.run(SKAction.fadeAlpha(to: 1.0, duration: 0.5))
+    }
+    
+    func hideBackground() {
+        let fadeOutAction = SKAction.fadeAlpha(to: 0.0, duration: 0.5)
+        
+        let nodesToHide = [starsBackground, earthBackground, stardustBackground, moonBackground]
+        
+        for node in nodesToHide {
+            node?.run(fadeOutAction)
+        }
+    }
+    
+    func showMoon() {
+        let fadeInAction = SKAction.fadeAlpha(to: 1.0, duration: 0.5)
+        
+        let nodesToShow = [moon, gatewayOrion]
+        
+        for node in nodesToShow {
+            node?.run(fadeInAction)
+        }
+    }
+    
+    func hideMoon() {
+        let fadeOutAction = SKAction.fadeAlpha(to: 0.0, duration: 0.5)
+        
+        let nodesToHide = [moon, gatewayOrion]
+        
+        for node in nodesToHide {
+            node?.run(fadeOutAction)
+        }
+    }
+    
+    func showImages() {
+        let fadeInAction = SKAction.fadeAlpha(to: 1.0, duration: 0.5)
+        
+        let nodesToShow = [reid, victor, christina, jeremy, reidBox, victorBox, christinaBox, jeremyBox]
+        
+        for node in nodesToShow {
+            node?.run(fadeInAction)
+        }
     }
     
     func hideImages() {
         let fadeOutAction = SKAction.fadeAlpha(to: 0.0, duration: 0.5)
-
+        
         let nodesToHide = [reid, victor, christina, jeremy, reidBox, victorBox, christinaBox, jeremyBox]
-
+        
         for node in nodesToHide {
             node?.run(fadeOutAction)
         }
-//        reid.run(SKAction.fadeAlpha(to: 0.0, duration: 0.5))
-//        victor.run(SKAction.fadeAlpha(to: 0.0, duration: 0.5))
-//        christina.run(SKAction.fadeAlpha(to: 0.0, duration: 0.5))
-//        jeremy.run(SKAction.fadeAlpha(to: 0.0, duration: 0.5))
-//        reidBox.run(SKAction.fadeAlpha(to: 0.0, duration: 0.5))
-//        victorBox.run(SKAction.fadeAlpha(to: 0.0, duration: 0.5))
-//        christinaBox.run(SKAction.fadeAlpha(to: 0.0, duration: 0.5))
-//        jeremyBox.run(SKAction.fadeAlpha(to: 0.0, duration: 0.5))
     }
     
     func showEyes() {
@@ -174,12 +218,23 @@ class IntroScreenScene: SKScene {
         node.run(SKAction.repeatForever(fade))
     }
     
+    func earthAnimation(node: SKSpriteNode?) {
+        guard let node = node else { return }
+        
+        let swing = SKAction.sequence([
+            SKAction.rotate(byAngle: 0.02, duration: 1.5),
+            SKAction.rotate(byAngle: -0.02, duration: 1.5)
+        ])
+        
+        node.run(SKAction.repeatForever(swing))
+    }
+    
     func moonAnimation(node: SKSpriteNode?) {
         guard let node = node else { return }
         
         let swing = SKAction.sequence([
-            SKAction.rotate(byAngle: 0.04, duration: 1.0),
-            SKAction.rotate(byAngle: -0.04, duration: 1.0)
+            SKAction.rotate(byAngle: 0.06, duration: 1.0),
+            SKAction.rotate(byAngle: -0.06, duration: 1.0)
         ])
         
         node.run(SKAction.repeatForever(swing))
@@ -187,42 +242,44 @@ class IntroScreenScene: SKScene {
     
     func eyesAnimation() {
         var textures = [SKTexture]()
-
+        
         for i in 1...5 {
             textures.append(SKTexture(imageNamed: "face\(i)"))
         }
-
+        
         for i in (1...4).reversed() {
             textures.append(SKTexture(imageNamed: "face\(i)"))
         }
-
+        
         let frames = SKAction.animate(with: textures, timePerFrame: 0.05, resize: false, restore: false)
         let wait = SKAction.wait(forDuration: 2.0)
         let sequence = SKAction.sequence([frames, wait])
         let repeatedSequence = SKAction.repeatForever(sequence)
-
+        
         eyes.run(repeatedSequence)
-//        var textures = [SKTexture]()
-//        
-//        textures.append(SKTexture(imageNamed: "face1"))
-//        textures.append(SKTexture(imageNamed: "face2"))
-//        textures.append(SKTexture(imageNamed: "face3"))
-//        textures.append(SKTexture(imageNamed: "face4"))
-//        textures.append(SKTexture(imageNamed: "face5"))
-//        textures.append(SKTexture(imageNamed: "face4"))
-//        textures.append(SKTexture(imageNamed: "face4"))
-//        textures.append(SKTexture(imageNamed: "face2"))
-//        textures.append(SKTexture(imageNamed: "face1"))
-//        
-//        let frames = SKAction.animate(with: textures, timePerFrame: 0.1, resize: false, restore: false)
-//        
-//        let wait = SKAction.wait(forDuration: 2.0)
-//        
-//        let sequence = SKAction.sequence([frames, wait])
-//        
-//        let repeatedSequence = SKAction.repeatForever(sequence)
-//        
-//        eyes.run(repeatedSequence)
+    }
+    
+    func gatewayAnimation(node: SKSpriteNode?) {
+        guard let node = node else { return }
+        
+        let duration: TimeInterval = 8.0
+        let orbitPath = UIBezierPath(ovalIn: CGRect(x: -340, y: -300, width: 650, height: 800))
+        let orbitRotation = CGFloat.pi / 4.0
+        
+        let orbitMovement = SKAction.follow(orbitPath.cgPath, asOffset: false, orientToPath: true, duration: duration)
+        let rotation = SKAction.rotate(byAngle: orbitRotation, duration: duration)
+        
+        let orbitAnimation = SKAction.group([orbitMovement, rotation])
+        
+        node.run(SKAction.repeatForever(orbitAnimation))
+    }
+    
+    func playTouch() {
+        if touchButton.isPlaying {
+            touchButton.stop()
+        }
+        
+        touchButton.play()
     }
     
     override func update(_ currentTime: TimeInterval) {
@@ -231,6 +288,8 @@ class IntroScreenScene: SKScene {
     func touchDown(atPoint pos: CGPoint) {
         if nextButton.contains(pos) {
             nextDialogue()
+            
+            playTouch()
         }
     }
     

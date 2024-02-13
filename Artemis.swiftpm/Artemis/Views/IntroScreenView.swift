@@ -14,16 +14,15 @@ struct IntroScreenView: View {
     var body: some View {
         
         VStack {
-//            Text("Hi")
-//            if isNavigating {
-//                MenuScreenView()
-//            } else {
+            if isNavigating {
+                RocketScreenView()
+            } else {
                 SpriteView(scene: IntroScreenScene.buildScene(performNavigation: {
                     withAnimation {
                         isNavigating = true
                     }
                 }))
-//            }
+            }
         }
         .ignoresSafeArea()
         .navigationBarHidden(true)

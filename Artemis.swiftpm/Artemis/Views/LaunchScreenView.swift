@@ -22,6 +22,11 @@ struct LaunchScreenView: View {
                         isNavigating = true
                     }
                 }))
+//                SpriteView(scene: FinalScreenScene.buildScene(performNavigation: {
+//                    withAnimation {
+//                        isNavigating = true
+//                    }
+//                }))
             }
         }
         .ignoresSafeArea()
