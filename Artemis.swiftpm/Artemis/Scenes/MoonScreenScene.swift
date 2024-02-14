@@ -32,41 +32,34 @@ class MoonScreenScene: SKScene {
         DialogueMoon(popUp: "dialogueBox19"),
         DialogueMoon(popUp: "dialogueBox20")
     ]
-    
     var touchButton: AVAudioPlayer!
     var starPassed: AVAudioPlayer!
     
     override func didMove(to view: SKView) {
+        // Background nodes
         self.backgroundColor = UIColor(red: 0x1D / 255.0, green: 0x15 / 255.0, blue: 0x47 / 255.0, alpha: 1.0)
         
         starsBackground = (childNode(withName: "starsBackground") as! SKSpriteNode)
         starsAnimation(node: starsBackground)
-        
+        earth = (childNode(withName: "earth") as! SKSpriteNode)
+        earthAnimation(node: earth)
         moonBackground = (childNode(withName: "moonBackground") as! SKSpriteNode)
         moonAnimation(node: moonBackground)
         
-        earth = (childNode(withName: "earth") as! SKSpriteNode)
-        earthAnimation(node: earth)
-        
+        // Moon nodes
         objetoArrastavel = (childNode(withName: "orionUpperStage") as? SKSpriteNode)
-        
         trajectory = (childNode(withName: "trajectory") as! SKSpriteNode)
-        
         gateway = (childNode(withName: "gateway") as! SKSpriteNode)
         gatewayAnimation(node: gateway)
-        
         dialogueBoxLuna = (childNode(withName: "dialogueBoxLuna") as! SKSpriteNode)
         dialogueBoxLuna.size = CGSize(width: 959, height: 318)
-        
         nextButton = (childNode(withName: "nextButton") as! SKSpriteNode)
-        
         star1 = (childNode(withName: "star1") as! SKSpriteNode)
         star2 = (childNode(withName: "star2") as! SKSpriteNode)
         star3 = (childNode(withName: "star3") as! SKSpriteNode)
         star4 = (childNode(withName: "star4") as! SKSpriteNode)
         star5 = (childNode(withName: "star5") as! SKSpriteNode)
         star6 = (childNode(withName: "star6") as! SKSpriteNode)
-        
         tooltip1 = (childNode(withName: "tooltip1") as! SKSpriteNode)
         tooltip2 = (childNode(withName: "tooltip2") as! SKSpriteNode)
         tooltip3 = (childNode(withName: "tooltip3") as! SKSpriteNode)
@@ -74,9 +67,7 @@ class MoonScreenScene: SKScene {
         tooltip4half = (childNode(withName: "tooltip4half") as! SKSpriteNode)
         tooltip5 = (childNode(withName: "tooltip5") as! SKSpriteNode)
         tooltip6 = (childNode(withName: "tooltip6") as! SKSpriteNode)
-        
         orionLight = childNode(withName: "orionLight")
-        
         point1 = childNode(withName: "point1")
         point1half = childNode(withName: "point1half")
         point2 = childNode(withName: "point2")
@@ -92,10 +83,11 @@ class MoonScreenScene: SKScene {
         point5four = childNode(withName: "point5four")
         point6 = childNode(withName: "point6")
         
+        configureNodesMoon(in: self)
+        
+        // pass the dialogues
         let dialogue = dialogues.removeFirst()
         dialogueBoxLuna.texture = SKTexture(imageNamed: dialogue.popUp)
-        
-        configureNodesMoon(in: self)
         
         // touch button
         let url: URL = Bundle.main.url(forResource: "touch", withExtension: "m4a")!
@@ -109,6 +101,7 @@ class MoonScreenScene: SKScene {
         starPassed.numberOfLoops = 0
         starPassed.volume = 0.3
         
+        // sets alpha to 0.0 when starting the scene
         star1.alpha = 0.0
         star2.alpha = 0.0
         star3.alpha = 0.0
@@ -127,14 +120,18 @@ class MoonScreenScene: SKScene {
         objetoArrastavel.alpha = 0.0
     }
     
+    // function to pass the dialogues
     func nextDialogue() {
+        
+        // if all the dialogues don't pass
         if dialogues.count >= 1 {
             let dialogue = dialogues.removeFirst()
             
             dialogueBoxLuna.run(.setTexture(SKTexture(imageNamed: dialogue.popUp), resize: false))
             
             playTouch()
-            
+        
+        // if all dialogues pass
         } else if dialogues.count == 0 {
             objetoArrastavel.alpha = 1.0
             
@@ -143,6 +140,7 @@ class MoonScreenScene: SKScene {
             playTouch()
         }
         
+        // if the <lunarModule> touches the point6, the <pointPassed[13]>, is possible pass to the next scene
         if pointPassed[13] == true {
             performNavigation?()
             
@@ -150,14 +148,17 @@ class MoonScreenScene: SKScene {
         }
     }
     
+    // function to show the nextButton
     func showNextButton() {
         nextButton.run(SKAction.fadeAlpha(to: 1.0, duration: 0.2))
     }
     
+    // function to hide the nextButton
     func hideNextButton() {
         nextButton.run(SKAction.fadeAlpha(to: 0.0, duration: 0.1))
     }
     
+    // function to animate the stars in the background
     func starsAnimation(node: SKSpriteNode?) {
         guard let node = node else { return }
         
@@ -169,17 +170,7 @@ class MoonScreenScene: SKScene {
         node.run(SKAction.repeatForever(fade))
     }
     
-    func moonAnimation(node: SKSpriteNode?) {
-        guard let node = node else { return }
-        
-        let swing = SKAction.sequence([
-            SKAction.rotate(byAngle: 0.1, duration: 1.0),
-            SKAction.rotate(byAngle: -0.1, duration: 1.0)
-        ])
-        
-        node.run(SKAction.repeatForever(swing))
-    }
-    
+    // function to animate the earth in the background
     func earthAnimation(node: SKSpriteNode?) {
         guard let node = node else { return }
         
@@ -191,53 +182,59 @@ class MoonScreenScene: SKScene {
         node.run(SKAction.repeatForever(swing))
     }
     
+    // function to animate the moon in the background
+    func moonAnimation(node: SKSpriteNode?) {
+        guard let node = node else { return }
+        
+        let swing = SKAction.sequence([
+            SKAction.rotate(byAngle: 0.1, duration: 1.0),
+            SKAction.rotate(byAngle: -0.1, duration: 1.0)
+        ])
+        
+        node.run(SKAction.repeatForever(swing))
+    }
+    
+    // function to animate the lunar station gateway
     func gatewayAnimation(node: SKSpriteNode?) {
         guard let node = node else { return }
         
-        let duration: TimeInterval = 10.0 // Duração total da animação
-        let orbitPath = UIBezierPath(ovalIn: CGRect(x: -55, y: -640, width: 440, height: 390)) // Caminho oval
-        let orbitRotation = CGFloat.pi / 4.0 // Rotação do caminho oval
+        let duration: TimeInterval = 10.0
+        let orbitPath = UIBezierPath(ovalIn: CGRect(x: -55, y: -640, width: 440, height: 390))
+        let orbitRotation = CGFloat.pi / 4.0
         
-        // Crie a animação de movimento ao longo do caminho oval
         let orbitMovement = SKAction.follow(orbitPath.cgPath, asOffset: false, orientToPath: true, duration: duration)
-        let rotation = SKAction.rotate(byAngle: orbitRotation, duration: duration) // Rotação enquanto se move
+        let rotation = SKAction.rotate(byAngle: orbitRotation, duration: duration)
         
-        // Combine as ações de movimento e rotação
         let orbitAnimation = SKAction.group([orbitMovement, rotation])
         
-        // Repita a animação para sempre
         node.run(SKAction.repeatForever(orbitAnimation))
     }
     
+    // function to animate the orbit of the Draggable object
     func rotateAnimation(to angle: CGFloat, duration: TimeInterval) {
-        // Cria a animação de rotação para o ângulo especificado
         let rotateAction = SKAction.rotate(toAngle: angle, duration: duration, shortestUnitArc: true)
         
-        // Executa a animação no objeto arrastável
         objetoArrastavel.run(rotateAction)
     }
     
+    // function to animate when the tooltip appears
     func tooltipAnimation(node: SKSpriteNode, numberOfJumps: Int) {
-        // Defina as ações de animação
         let scaleUp = SKAction.scale(to: 1.1, duration: 0.3)
         let scaleDown = SKAction.scale(to: 1.0, duration: 0.3)
         let bounce = SKAction.sequence([scaleUp, scaleDown])
         
-        // Execute a animação um número específico de vezes
         let repeatAction = SKAction.repeat(bounce, count: numberOfJumps)
         
-        // Execute a ação de conclusão para tornar o tooltip estático
         let makeStatic = SKAction.run {
             node.removeAllActions()
         }
         
-        // Execute as ações em sequência
         let sequence = SKAction.sequence([repeatAction, makeStatic])
         
-        // Execute a sequência de ações
         node.run(sequence)
     }
     
+    // function to play the button tap sound
     func playTouch() {
         if touchButton.isPlaying {
             touchButton.stop()
@@ -246,6 +243,7 @@ class MoonScreenScene: SKScene {
         touchButton.play()
     }
     
+    // function to play the star sound
     func playStar() {
         if starPassed.isPlaying {
             starPassed.stop()
@@ -258,6 +256,8 @@ class MoonScreenScene: SKScene {
     }
     
     func touchDown(atPoint pos: CGPoint) {
+        
+        // if the nextButton is tapped, show the next dialogue and play button sound
         if nextButton.contains(pos) {
             nextDialogue()
         }
@@ -275,9 +275,7 @@ class MoonScreenScene: SKScene {
         guard let touch = touches.first else { return }
         let touchLocation = touch.location(in: self)
         
-        // Verifique se o toque ocorreu dentro do objeto arrastável
         if objetoArrastavel.frame.contains(touchLocation) {
-            // Salve a posição inicial do toque
             lastTouchPosition = touchLocation
         }
     }
@@ -287,26 +285,20 @@ class MoonScreenScene: SKScene {
         
         guard let touch = touches.first, let lastPosition = lastTouchPosition else { return }
         
-        // Calcule a diferença entre a posição atual do toque e a posição inicial do toque
         let deltaX = touch.location(in: self).x - lastPosition.x
         let deltaY = touch.location(in: self).y - lastPosition.y
         
-        // Mova o objeto arrastável
         objetoArrastavel.position.x += deltaX
         objetoArrastavel.position.y += deltaY
         
         orionLight.position.x += deltaX
         orionLight.position.y += deltaY
         
-        // Atualize a última posição do toque
         lastTouchPosition = touch.location(in: self)
         
-        // Verifique se o objeto está sobre os pontos
         checkIfObjectIsOnPoint()
         
-        // Verifique se o objeto está sobre o point6 e pare o movimento se estiver
         if objetoArrastavel.frame.intersects(point6.frame) && pointPassed[13] == true {
-            // Pare o movimento do objeto definindo sua posição como a posição do point6
             objetoArrastavel.position = point6.position
         }
     }
@@ -315,7 +307,6 @@ class MoonScreenScene: SKScene {
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         for t in touches { touchUp(atPoint: t.location(in: self)) }
         
-        // Limpe a última posição do toque
         lastTouchPosition = nil
     }
     
@@ -325,27 +316,22 @@ class MoonScreenScene: SKScene {
     
     func checkIfObjectIsOnPoint() {
         if objetoArrastavel.frame.intersects(point1.frame) && !pointPassed[0] {
-            //            print("Objeto passou por cima de point1!")
-            
             pointPassed[0] = true
             star1.alpha = 1.0
             tooltip1.alpha = 1.0
             tooltipAnimation(node: tooltip1, numberOfJumps: 1)
             
             playStar()
-            
-            //            objetoArrastavel.zRotation = CGFloat.pi
+          
             rotateAnimation(to: CGFloat.pi / 1.0, duration: 0.5)
             
         } else if objetoArrastavel.frame.intersects(point1half.frame) && pointPassed[0] && !pointPassed[1] {
-            //            print("Objeto passou por cima de point1half!")
             
             pointPassed[1] = true
             
             rotateAnimation(to: -CGFloat.pi / 4.5, duration: 0.5)
             
         } else if objetoArrastavel.frame.intersects(point2.frame) && pointPassed[1] && !pointPassed[2] {
-            //            print("Objeto passou por cima de point2!")
             
             pointPassed[2] = true
             star2.alpha = 1.0
@@ -357,14 +343,12 @@ class MoonScreenScene: SKScene {
             rotateAnimation(to: CGFloat.pi / 8.0, duration: 0.5)
             
         } else if objetoArrastavel.frame.intersects(point2half.frame) && pointPassed[2] && !pointPassed[3] {
-            //            print("Objeto passou por cima de point2half!")
             
             pointPassed[3] = true
             
             rotateAnimation(to: CGFloat.pi / 1.5, duration: 0.5)
             
         } else if objetoArrastavel.frame.intersects(point3.frame) && pointPassed[3] && !pointPassed[4] {
-            //            print("Objeto passou por cima de point3!")
             
             pointPassed[4] = true
             star3.alpha = 1.0
@@ -376,14 +360,12 @@ class MoonScreenScene: SKScene {
             rotateAnimation(to: -CGFloat.pi / 1.0, duration: 0.5)
             
         } else if objetoArrastavel.frame.intersects(point3half.frame) && pointPassed[4] && !pointPassed[5] {
-            //            print("Objeto passou por cima de point3half!")
             
             pointPassed[5] = true
             
             rotateAnimation(to: -CGFloat.pi / 1.8, duration: 0.5)
             
         } else if objetoArrastavel.frame.intersects(point4.frame) && pointPassed[5] && !pointPassed[6] {
-            //            print("Objeto passou por cima de point4!")
             
             pointPassed[6] = true
             star4.alpha = 1.0
@@ -395,7 +377,6 @@ class MoonScreenScene: SKScene {
             rotateAnimation(to: -CGFloat.pi / 2.0, duration: 0.5)
             
         } else if objetoArrastavel.frame.intersects(point4half.frame) && pointPassed[6] && !pointPassed[7] {
-            //            print("Objeto passou por cima de point4half!")
             
             pointPassed[7] = true
             tooltip4half.alpha = 1.0
@@ -404,7 +385,6 @@ class MoonScreenScene: SKScene {
             rotateAnimation(to: CGFloat.pi / 1.0, duration: 0.5)
             
         } else if objetoArrastavel.frame.intersects(point5.frame) && pointPassed[7] && !pointPassed[8] {
-            //            print("Objeto passou por cima de point5!")
             
             pointPassed[8] = true
             star5.alpha = 1.0
@@ -418,36 +398,29 @@ class MoonScreenScene: SKScene {
         } else if objetoArrastavel.frame.intersects(point5one.frame) && pointPassed[8] && !pointPassed[9] {
             
             if changeImages == true {
-                //                print("Objeto passou por cima de point5one!")
-                
                 pointPassed[9] = true
-                
                 rotateAnimation(to: CGFloat.pi / 5.0, duration: 0.5)
             }
             
         } else if objetoArrastavel.frame.intersects(point5two.frame) && pointPassed[9] && !pointPassed[10] {
-            //            print("Objeto passou por cima de point5two!")
             
             pointPassed[10] = true
             
             rotateAnimation(to: -CGFloat.pi / 3.0, duration: 0.5)
             
         } else if objetoArrastavel.frame.intersects(point5three.frame) && pointPassed[10] && !pointPassed[11] {
-            //            print("Objeto passou por cima de point5three!")
             
             pointPassed[11] = true
             
             rotateAnimation(to: CGFloat.pi / 1.0, duration: 0.5)
             
         } else if objetoArrastavel.frame.intersects(point5four.frame) && pointPassed[11] && !pointPassed[12] {
-            //            print("Objeto passou por cima de point5four!")
             
             pointPassed[12] = true
             
             rotateAnimation(to: CGFloat.pi / 3.0, duration: 0.5)
             
         } else if objetoArrastavel.frame.intersects(point6.frame) && pointPassed[12] && !pointPassed[13] {
-            //            print("Objeto passou por cima de point6!")
             
             pointPassed[13] = true
             star6.alpha = 1.0
@@ -465,12 +438,10 @@ class MoonScreenScene: SKScene {
             
             changeImages = true
             
-            // Objeto passou sobre a imagem "gateway"
             gateway.texture = SKTexture(imageNamed: "gatewayOrion")
             objetoArrastavel.texture = SKTexture(imageNamed: "lunarModule")
         }
     }
-    
 }
 
 struct DialogueMoon {

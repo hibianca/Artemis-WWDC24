@@ -19,13 +19,15 @@ class CreditsScreenScene: SKScene {
     
     var starsBackground, credits: SKSpriteNode!
     var backButton: SKSpriteNode!
-    
     var touchButton: AVAudioPlayer!
     
     override func didMove(to view: SKView) {
+        // Background nodes
         self.backgroundColor = UIColor(red: 0x1D / 255.0, green: 0x15 / 255.0, blue: 0x47 / 255.0, alpha: 1.0)
         
         starsBackground = (childNode(withName: "starsBackground") as! SKSpriteNode)
+        
+        // Credits nodes
         credits = (childNode(withName: "credits") as! SKSpriteNode)
         backButton = (childNode(withName: "backButton") as! SKSpriteNode)
         
@@ -38,6 +40,7 @@ class CreditsScreenScene: SKScene {
         touchButton.volume = 0.3
     }
     
+    // function to play the button tap sound
     func playTouch() {
         if touchButton.isPlaying {
             touchButton.stop()
@@ -51,6 +54,8 @@ class CreditsScreenScene: SKScene {
     }
     
     func touchDown(atPoint pos: CGPoint) {
+        
+        // if the backButton is tapped, back to the MenuScreenScene and play button sound
         if backButton.contains(pos) {
             backButton.alpha = 0.5
             performNavigation?()

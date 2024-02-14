@@ -35,35 +35,27 @@ class IntroScreenScene: SKScene {
         Dialogue(popUp: "dialogueBox8", lunaImage: .luna2),
         Dialogue(popUp: "dialogueBox9", lunaImage: .luna1)
     ]
-    
     var touchButton: AVAudioPlayer!
     
     override func didMove(to view: SKView) {
-        // Background
+        // Background nodes
         self.backgroundColor = UIColor(red: 0x1D / 255.0, green: 0x15 / 255.0, blue: 0x47 / 255.0, alpha: 1.0)
         
         starsBackground = (childNode(withName: "starsBackground") as! SKSpriteNode)
         starsAnimation(node: starsBackground)
-        
         earthBackground = (childNode(withName: "earthBackground") as! SKSpriteNode)
         earthAnimation(node: earthBackground)
-        
         stardustBackground = (childNode(withName: "stardustBackground") as! SKSpriteNode)
-        
         moonBackground = (childNode(withName: "moonBackground") as! SKSpriteNode)
         moonAnimation(node: moonBackground)
         
+        // Introduction nodes
         moon = (childNode(withName: "moon") as! SKSpriteNode)
         gatewayOrion = (childNode(withName: "gatewayOrion") as! SKSpriteNode)
         gatewayAnimation(node: gatewayOrion)
-        
-        configureNodesIntro(in: self)
-        
-        // Welcome
         luna = (childNode(withName: "Luna1") as! SKSpriteNode)
         eyes = (childNode(withName: "eyes") as! SKSpriteNode)
         eyesAnimation()
-        
         reid = (childNode(withName: "reid") as! SKSpriteNode)
         victor = (childNode(withName: "victor") as! SKSpriteNode)
         christina = (childNode(withName: "christina") as! SKSpriteNode)
@@ -75,16 +67,20 @@ class IntroScreenScene: SKScene {
         dialogueBox = (childNode(withName: "dialogueBox") as! SKSpriteNode)
         nextButton = (childNode(withName: "nextButton") as! SKSpriteNode)
         
+        configureNodesIntro(in: self)
+        
+        // pass the dialogues
         let dialogue = dialogues.removeFirst()
         dialogueBox.texture = SKTexture(imageNamed: dialogue.popUp)
         luna.texture = SKTexture(imageNamed: dialogue.lunaImage.rawValue)
         
-        // touch button
+        // audio for when a button is tapped
         let url: URL = Bundle.main.url(forResource: "touch", withExtension: "m4a")!
         touchButton = try! AVAudioPlayer(contentsOf: url, fileTypeHint: nil)
         touchButton.numberOfLoops = 1
         touchButton.volume = 0.3
         
+        // sets alpha to 0.0 when starting the scene
         reid.alpha = 0.0
         victor.alpha = 0.0
         christina.alpha = 0.0
@@ -95,37 +91,30 @@ class IntroScreenScene: SKScene {
         jeremyBox.alpha = 0.0
     }
     
-    //    func nextDialogue() {
-    //        if dialogues.count >= 1 {
-    //            let dialogue = dialogues.removeFirst()
-    //
-    //            dialogueBox.run(.setTexture(SKTexture(imageNamed: dialogue.popUp), resize: true))
-    //
-    //            luna.texture = SKTexture(imageNamed: dialogue.lunaImage.rawValue)
-    //        } else if dialogues.count == 0 {
-    //            performNavigation?()
-    //        }
-    //    }
-    
+    // function to pass the dialogues
     func nextDialogue() {
+        
+        // if all the dialogues don't pass
         if dialogues.count >= 1 {
+            
             let dialogue = dialogues.removeFirst()
-            
             dialogueBox.run(.setTexture(SKTexture(imageNamed: dialogue.popUp), resize: true))
-            
             luna.texture = SKTexture(imageNamed: dialogue.lunaImage.rawValue)
             
+            // when dialog box 7 appears, Luna and her eyes disappear and images of the crew appear
             if dialogue.popUp == "dialogueBox7" {
                 luna.alpha = 0.0
                 showImages()
                 hideEyes()
-                
+            
+            // when dialogue box 5 appears, Luna and her eyes disappear and moon and gateway images appear
             } else if dialogue.popUp == "dialogueBox5" {
                 luna.alpha = 0.0
                 showMoon()
                 hideBackground()
                 hideEyes()
-                
+            
+            // if it is not dialog box 5 or 7 which is appearing on the screen, Luna, her eyes and the background appear and crew, moon and gateway dissapear
             } else  {
                 luna.alpha = 1.0
                 hideImages()
@@ -133,12 +122,14 @@ class IntroScreenScene: SKScene {
                 showBackground()
                 showEyes()
             }
-            
+        
+        // if all dialogues pass
         } else if dialogues.count == 0 {
             performNavigation?()
         }
     }
     
+    // function to show background elements
     func showBackground() {
         let fadeInAction = SKAction.fadeAlpha(to: 1.0, duration: 0.5)
         
@@ -149,6 +140,7 @@ class IntroScreenScene: SKScene {
         }
     }
     
+    // function to hide background elements
     func hideBackground() {
         let fadeOutAction = SKAction.fadeAlpha(to: 0.0, duration: 0.5)
         
@@ -159,6 +151,7 @@ class IntroScreenScene: SKScene {
         }
     }
     
+    // function to show the moon and the gateway when Luna talks about the artemis missions
     func showMoon() {
         let fadeInAction = SKAction.fadeAlpha(to: 1.0, duration: 0.5)
         
@@ -169,6 +162,7 @@ class IntroScreenScene: SKScene {
         }
     }
     
+    // function to hide the moon and the gateway when the dialog passes
     func hideMoon() {
         let fadeOutAction = SKAction.fadeAlpha(to: 0.0, duration: 0.5)
         
@@ -179,6 +173,7 @@ class IntroScreenScene: SKScene {
         }
     }
     
+    // function to show the crew and their names
     func showImages() {
         let fadeInAction = SKAction.fadeAlpha(to: 1.0, duration: 0.5)
         
@@ -189,6 +184,7 @@ class IntroScreenScene: SKScene {
         }
     }
     
+    // function to hide the crew and their names
     func hideImages() {
         let fadeOutAction = SKAction.fadeAlpha(to: 0.0, duration: 0.5)
         
@@ -199,14 +195,17 @@ class IntroScreenScene: SKScene {
         }
     }
     
+    // function to show Luna's eyes
     func showEyes() {
         eyes.run(SKAction.fadeAlpha(to: 1.0, duration: 0.5))
     }
     
+    // function to hide Luna's eyes
     func hideEyes() {
         eyes.run(SKAction.fadeAlpha(to: 0.0, duration: 0.1))
     }
     
+    // function to animate the stars in the background
     func starsAnimation(node: SKSpriteNode?) {
         guard let node = node else { return }
         
@@ -218,6 +217,7 @@ class IntroScreenScene: SKScene {
         node.run(SKAction.repeatForever(fade))
     }
     
+    // function to animate the earth in the background
     func earthAnimation(node: SKSpriteNode?) {
         guard let node = node else { return }
         
@@ -229,6 +229,7 @@ class IntroScreenScene: SKScene {
         node.run(SKAction.repeatForever(swing))
     }
     
+    // function to animate the moon in the background
     func moonAnimation(node: SKSpriteNode?) {
         guard let node = node else { return }
         
@@ -240,6 +241,7 @@ class IntroScreenScene: SKScene {
         node.run(SKAction.repeatForever(swing))
     }
     
+    // function to animate the Luna's eyes in the background
     func eyesAnimation() {
         var textures = [SKTexture]()
         
@@ -259,6 +261,7 @@ class IntroScreenScene: SKScene {
         eyes.run(repeatedSequence)
     }
     
+    // function to animate the lunar station gateway
     func gatewayAnimation(node: SKSpriteNode?) {
         guard let node = node else { return }
         
@@ -274,6 +277,7 @@ class IntroScreenScene: SKScene {
         node.run(SKAction.repeatForever(orbitAnimation))
     }
     
+    // function to play the button tap sound
     func playTouch() {
         if touchButton.isPlaying {
             touchButton.stop()
@@ -286,6 +290,8 @@ class IntroScreenScene: SKScene {
     }
     
     func touchDown(atPoint pos: CGPoint) {
+        
+        // if the nextButton is tapped, show the next dialogue and play button sound
         if nextButton.contains(pos) {
             nextDialogue()
             

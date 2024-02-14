@@ -26,11 +26,10 @@ class FinalScreenScene: SKScene {
         Dialogue(popUp: "dialogueBox21", lunaImage: .luna1),
         Dialogue(popUp: "dialogueBox22", lunaImage: .luna2)
     ]
-    
     var touchButton: AVAudioPlayer!
     
     override func didMove(to view: SKView) {
-        // Background
+        // Background nodes
         self.backgroundColor = UIColor(red: 0x1D / 255.0, green: 0x15 / 255.0, blue: 0x47 / 255.0, alpha: 1.0)
         
         starsBackground = (childNode(withName: "starsBackground") as! SKSpriteNode)
@@ -41,27 +40,28 @@ class FinalScreenScene: SKScene {
         moonBackground2 = (childNode(withName: "moonBackground2") as! SKSpriteNode)
         moonAnimation(node: moonBackground2)
         
-        // Welcome
+        // Final nodes
         luna = (childNode(withName: "Luna1") as! SKSpriteNode)
         eyes = (childNode(withName: "eyes") as! SKSpriteNode)
         eyesAnimation()
-        
         dialogueBox = (childNode(withName: "dialogueBox") as! SKSpriteNode)
         nextButton = (childNode(withName: "nextButton") as! SKSpriteNode)
         
         configureNodesFinal(in: self)
         
+        // pass the dialogues
         let dialogue = dialogues.removeFirst()
         dialogueBox.texture = SKTexture(imageNamed: dialogue.popUp)
         luna.texture = SKTexture(imageNamed: dialogue.lunaImage.rawValue)
         
-        // touch button
+        // audio for touch button
         let url: URL = Bundle.main.url(forResource: "touch", withExtension: "m4a")!
         touchButton = try! AVAudioPlayer(contentsOf: url, fileTypeHint: nil)
         touchButton.numberOfLoops = 1
         touchButton.volume = 0.3
     }
     
+    // function to pass the dialogues
     func nextDialogue() {
         if dialogues.count >= 1 {
             let dialogue = dialogues.removeFirst()
@@ -75,14 +75,17 @@ class FinalScreenScene: SKScene {
         }
     }
     
+    // function to show the crew and their names
     func showEyes() {
         eyes.run(SKAction.fadeAlpha(to: 1.0, duration: 0.5))
     }
     
+    // function to hide the crew and their names
     func hideEyes() {
         eyes.run(SKAction.fadeAlpha(to: 0.0, duration: 0.1))
     }
     
+    // function to animate the stars in the background
     func starsAnimation(node: SKSpriteNode?) {
         guard let node = node else { return }
         
@@ -94,6 +97,7 @@ class FinalScreenScene: SKScene {
         node.run(SKAction.repeatForever(fade))
     }
     
+    // function to animate the earth in the background
     func earthAnimation(node: SKSpriteNode?) {
         guard let node = node else { return }
         
@@ -105,6 +109,7 @@ class FinalScreenScene: SKScene {
         node.run(SKAction.repeatForever(swing))
     }
     
+    // function to animate the moon in the background
     func moonAnimation(node: SKSpriteNode?) {
         guard let node = node else { return }
         
@@ -116,6 +121,7 @@ class FinalScreenScene: SKScene {
         node.run(SKAction.repeatForever(swing))
     }
     
+    // function to animate the Luna's eyes in the background
     func eyesAnimation() {
         var textures = [SKTexture]()
 
@@ -135,6 +141,7 @@ class FinalScreenScene: SKScene {
         eyes.run(repeatedSequence)
     }
     
+    // function to play the button tap sound
     func playTouch() {
         if touchButton.isPlaying {
             touchButton.stop()
@@ -147,6 +154,8 @@ class FinalScreenScene: SKScene {
     }
     
     func touchDown(atPoint pos: CGPoint) {
+        
+        // if the nextButton is tapped, show the next dialogue and play button sound
         if nextButton.contains(pos) {
             nextDialogue()
             
@@ -158,7 +167,6 @@ class FinalScreenScene: SKScene {
     }
     
     func touchMoved(atPoint pos: CGPoint) {
-        
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {

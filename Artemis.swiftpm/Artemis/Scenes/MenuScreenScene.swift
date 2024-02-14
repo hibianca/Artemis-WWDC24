@@ -26,29 +26,26 @@ class MenuScreenScene: SKScene {
     
     var starsBackground, earthBackground, stardustBackground, moonBackground: SKSpriteNode!
     var dialogueBoxMenu, startButton, creditsButton: SKSpriteNode!
-    
     var touchButton: AVAudioPlayer!
     
     override func didMove(to view: SKView) {
+        // Background nodes
         self.backgroundColor = UIColor(red: 0x1D / 255.0, green: 0x15 / 255.0, blue: 0x47 / 255.0, alpha: 1.0)
         
         starsBackground = (childNode(withName: "starsBackground") as! SKSpriteNode)
         starsAnimation(node: starsBackground)
-
         earthBackground = (childNode(withName: "earthBackground") as! SKSpriteNode)
         earthAnimation(node: earthBackground)
-        
         stardustBackground = (childNode(withName: "stardustBackground") as! SKSpriteNode)
-        
         moonBackground = (childNode(withName: "moonBackground") as! SKSpriteNode)
         moonAnimation(node: moonBackground)
         
+        // Menu nodes
         dialogueBoxMenu = (childNode(withName: "dialogueBoxMenu") as! SKSpriteNode)
         startButton = (childNode(withName: "startButton") as! SKSpriteNode)
         creditsButton = (childNode(withName: "creditsButton") as! SKSpriteNode)
         
         configureLabels(scene: self)
-        
         configureNodesMenu(in: self)
         
         // touch button
@@ -67,6 +64,7 @@ class MenuScreenScene: SKScene {
         backAudioMain.play()
     }
     
+    // function to animate the stars in the background
     func starsAnimation(node: SKSpriteNode?) {
         guard let node = node else { return }
         
@@ -78,6 +76,7 @@ class MenuScreenScene: SKScene {
         node.run(SKAction.repeatForever(fade))
     }
     
+    // function to animate the earth in the background
     func earthAnimation(node: SKSpriteNode?) {
         guard let node = node else { return }
         
@@ -89,6 +88,7 @@ class MenuScreenScene: SKScene {
         node.run(SKAction.repeatForever(swing))
     }
     
+    // function to animate the moon in the background
     func moonAnimation(node: SKSpriteNode?) {
         guard let node = node else { return }
         
@@ -100,6 +100,7 @@ class MenuScreenScene: SKScene {
         node.run(SKAction.repeatForever(swing))
     }
     
+    // function to play the button tap sound
     func playTouch() {
         if touchButton.isPlaying {
             touchButton.stop()
@@ -113,6 +114,8 @@ class MenuScreenScene: SKScene {
     }
     
     func touchDown(atPoint pos: CGPoint) {
+        
+        // if startButton is tapped, go to IntroScreenScene and play button sound
         if startButton.contains(pos) {
             startButton.alpha = 0.5
             
@@ -121,6 +124,7 @@ class MenuScreenScene: SKScene {
             performIntroNavigation?()
         }
         
+        // if creditsButton is tapped, go to CreditsScreenScene and play button sound
         if creditsButton.contains(pos) {
             creditsButton.alpha = 0.5
             

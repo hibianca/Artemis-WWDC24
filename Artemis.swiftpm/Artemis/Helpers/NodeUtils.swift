@@ -165,13 +165,11 @@ func configureLabels(scene: SKScene) {
     
     let backgroundColor = UIColor(red: 0x1D / 255.0, green: 0x15 / 255.0, blue: 0x47 / 255.0, alpha: 1.0)
     
-//    let backgroundColor = UIColor(red: 0.09, green: 0.45, blue: 0.71, alpha: 1.00)
-    
     let backgroundNode1 = SKSpriteNode(color: backgroundColor, size: CGSize(width: 500, height: 40))
     backgroundNode1.position = CGPoint(x: 0, y: scene.size.height/2 - spacing1 - backgroundNode1.size.height/2)
     scene.addChild(backgroundNode1)
     
-    let label1 = SKLabelNode(text: "For a good experience, it's important")
+    let label1 = SKLabelNode(text: "For a better experience, it's important")
     label1.fontName = "SF Pro"
     label1.fontSize = 24
     label1.fontColor = .white
@@ -219,16 +217,6 @@ func configureNodesLaunch(in scene: SKScene) {
     _ = scene.size.width
     
     configureNodeSizePosition(node: logo, scaleRatio: 1.0, sceneSize: scene.size)
-}
-
-func configureNodeSize(node: SKSpriteNode?, scaleRatio: CGFloat, sceneSize: CGSize) {
-    guard let node = node else { return }
-    
-    let screenWidth = sceneSize.width
-    let desiredWidth = screenWidth * scaleRatio
-    
-    let scaleFactor = desiredWidth / node.size.width
-    node.setScale(scaleFactor)
 }
 
 func configureNodeSizePosition(node: SKSpriteNode?, scaleRatio: CGFloat, sceneSize: CGSize) {

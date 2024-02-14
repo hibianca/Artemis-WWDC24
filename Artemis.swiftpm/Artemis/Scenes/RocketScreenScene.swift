@@ -27,31 +27,26 @@ class RocketScreenScene: SKScene {
         SKSpriteNode(imageNamed: "dialogueBox11")
     ]
     var imageList: [SKSpriteNode]!
-    
     var dragging: SKSpriteNode?
     var originalDraggingPosition: CGPoint?
     var zTop: CGFloat = 1
     var hasGone = 0
     var wasShown = false
-    
     var totalDialogues = 2
-    
     var touchButton: AVAudioPlayer!
     var dragRocket: AVAudioPlayer!
     
     override func didMove(to view: SKView) {
-        // Background
+        // Background nodes
         self.backgroundColor = UIColor(red: 0x1D / 255.0, green: 0x15 / 255.0, blue: 0x47 / 255.0, alpha: 1.0)
         
         bg1 = (childNode(withName: "bg1") as! SKSpriteNode)
-        
         starsLogo = (childNode(withName: "starsLogo") as! SKSpriteNode)
         starsAnimation(node: starsLogo)
-        
         dialogueBoxLuna = (childNode(withName: "dialogueBoxLuna") as! SKSpriteNode)
         nextButton = (childNode(withName: "nextButton") as! SKSpriteNode)
         
-        // Rocket
+        // Rocket nodes
         rocket1 = (childNode(withName: "rocket1") as! SKSpriteNode)
         rocket2 = (childNode(withName: "rocket2") as! SKSpriteNode)
         rocket3 = (childNode(withName: "rocket3") as! SKSpriteNode)
@@ -88,10 +83,12 @@ class RocketScreenScene: SKScene {
         
     }
     
+    // function to show the nextButton
     func showNextButton() {
         nextButton.run(SKAction.fadeAlpha(to: 1.0, duration: 0.2))
     }
     
+    // function to hide the nextButton
     func hideNextButton() {
         nextButton.run(SKAction.fadeAlpha(to: 0.0, duration: 0.1))
     }
@@ -109,6 +106,7 @@ class RocketScreenScene: SKScene {
         
     }
     
+    // function to pass the dialogues
     func nextDialogue() {
 //        for dialogue in rocketDialogues {
         for _ in rocketDialogues {
@@ -118,6 +116,7 @@ class RocketScreenScene: SKScene {
         }
     }
     
+    // function to animate the stars in the background
     func starsAnimation(node: SKSpriteNode?) {
         guard let node = node else { return }
         
@@ -129,6 +128,7 @@ class RocketScreenScene: SKScene {
         node.run(SKAction.repeatForever(fade))
     }
     
+    // function to play the button tap sound
     func playTouch() {
         if touchButton.isPlaying {
             touchButton.stop()
@@ -137,6 +137,7 @@ class RocketScreenScene: SKScene {
         touchButton.play()
     }
     
+    // function to play the rocket parts sound
     func playDrag() {
         if dragRocket.isPlaying {
             dragRocket.stop()
@@ -194,7 +195,6 @@ class RocketScreenScene: SKScene {
             }
             
             if (dragging == rocket2) && (centralStage.alpha == 1) {
-//            if (dragging == rocket2) {
                 dialogueBoxLuna.texture = SKTexture(imageNamed: "dialogueBox13")
                 hasGone += 1
                 dragging?.alpha = 0.5
@@ -204,7 +204,6 @@ class RocketScreenScene: SKScene {
             }
             
             if (dragging == rocket3) && (sideRockets.alpha == 1) {
-//            if (dragging == rocket3) {
                 dialogueBoxLuna.texture = SKTexture(imageNamed: "dialogueBox14")
                 hasGone += 1
                 dragging?.alpha = 0.5
@@ -214,7 +213,6 @@ class RocketScreenScene: SKScene {
             }
             
             if (dragging == rocket4) && (upperStage.alpha == 1) {
-//            if (dragging == rocket4) {
                 dialogueBoxLuna.texture = SKTexture(imageNamed: "dialogueBox15")
                 hasGone += 1
                 dragging?.alpha = 0.5
@@ -224,7 +222,6 @@ class RocketScreenScene: SKScene {
             }
             
             if (dragging == rocket5) && (orion.alpha == 1) {
-//            if (dragging == rocket5) {
                 dialogueBoxLuna.texture = SKTexture(imageNamed: "dialogueBox16")
                 hasGone += 1
                 dragging?.alpha = 0.5

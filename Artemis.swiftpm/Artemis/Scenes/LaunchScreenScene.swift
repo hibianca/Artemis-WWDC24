@@ -18,10 +18,10 @@ class LaunchScreenScene: SKScene {
     var logo: SKSpriteNode!
     
     override func didMove(to view: SKView) {
+        // Nodes
         self.backgroundColor = UIColor(red: 0x1D / 255.0, green: 0x15 / 255.0, blue: 0x47 / 255.0, alpha: 1.0)
         
         logo = (childNode(withName: "artemisLogo") as! SKSpriteNode)
-        
         setupLogoAnimation()
         
         configureNodesLaunch(in: self)
@@ -37,4 +37,3 @@ class LaunchScreenScene: SKScene {
         }
     }
 }
-
