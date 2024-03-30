@@ -1,5 +1,5 @@
 <picture>
-   <img src=https://media.discordapp.net/attachments/1113871889497083968/1223431128791126026/github.png?ex=6619d407&is=66075f07&hm=a817e56a7c2f9c57e2571f36347801479427ba31df16627fc0d32976b8de007a&=&format=webp&quality=lossless&width=1100&height=268>
+   <img src="https://media.discordapp.net/attachments/1113871889497083968/1223431128791126026/github.png?ex=6619d407&is=66075f07&hm=a817e56a7c2f9c57e2571f36347801479427ba31df16627fc0d32976b8de007a&=&format=webp&quality=lossless&width=1100&height=268">
 </picture>
 
 # Artemis
